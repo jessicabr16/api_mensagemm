@@ -36,6 +36,8 @@ def get_mensagem_por_id(id):
 @app.route('/mensagens', methods=['POST'])
 def create_mensagem():
     conteudo = request.get_json().get('conteudo')
+    if conteudo == "":
+        return jsonify({'erro': 'Mensagem vazia'}), 400
     nova_mensagem = Mensagem(conteudo=conteudo)
     db.session.add(nova_mensagem)
     db.session.commit()
@@ -47,6 +49,8 @@ def atualizar_mensagem(id):
     mensagem = Mensagem.query.get(id)
     if mensagem:
         novo_conteudo = request.get_json().get('conteudo')
+        if novo_conteudo == "":
+            return jsonify({'erro': 'Mensagem vazia'}), 400
         mensagem.conteudo = novo_conteudo
         db.session.commit()
         return jsonify(mensagem.to_dict())
